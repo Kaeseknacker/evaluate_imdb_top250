@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from imdb import IMDb
 
+from statistic_writer import StatisticWriter
+
 
 def save_object(obj, filename):
     with open(filename, 'wb') as output:  # Overwrites any existing file.
@@ -14,6 +16,8 @@ def save_object(obj, filename):
 
 
 def get_top250_movies(download_list):
+    ia = IMDb()
+    print(ia.get_movie_infoset())
     if download_list:
         ia = IMDb()
         top_movies = ia.get_top250_movies()
@@ -38,7 +42,7 @@ def parse_runtime(runtime_str):
     return int(y.group())
 
 
-def eval_years(top_movies):
+def eval_years(top_movies, sw):
     sorted_movies_year = sorted(top_movies, key=lambda movie: movie['year'], reverse=True)
     print("Newest Movies:")
     for movie in sorted_movies_year[:3]:
@@ -49,6 +53,10 @@ def eval_years(top_movies):
     years = [movie['year'] for movie in sorted_movies_year]
     print("mean release year =", statistics.mean(years))
     print("median release year =", statistics.median(years))
+
+    newest_movies = [f"{movie}, {movie['year']}" for movie in sorted_movies_year[:3]]
+    oldest_movies = [f"{movie}, {movie['year']}" for movie in sorted_movies_year[:-4:-1]]
+    sw.set_movie_years_informations(newest_movies, oldest_movies)
 
 
 def eval_runtime(top_movies):
@@ -79,7 +87,16 @@ def eval_votes(top_movies):
     #plt.plot([i for i in range(1, 251)], [m['votes'] for m in sorted_movies])
     #plt.plot([i for i in range(1, 251)], [m['votes'] for m in sorted(top_movies, key=lambda movie: movie['year'])])
     tmp = sorted(top_movies, key=lambda movie: movie['year'])
-    plt.plot([m['year'] for m in tmp], [m['votes'] for m in tmp], 'x-')
+    # TODO: mean und std-err für jedes Jahr berechnen
+    year_dict = {m['year']: [] for m in tmp}
+    for m in tmp:
+        year_dict[m['year']].append(m['votes'])
+    print(year_dict)
+    x = year_dict.keys()
+    y = [statistics.mean(v) for v in year_dict.values()]
+    yerr = [statistics.stdev(v) if len(v) > 1 else 0 for v in year_dict.values()]
+    plt.errorbar(x=x, y=y, yerr=yerr, fmt='-o')
+    #plt.plot([m['year'] for m in tmp], [m['votes'] for m in tmp], 'x-')
     plt.ylabel('votes')
     plt.xlabel("year")
     plt.title("votes per year")
@@ -97,19 +114,35 @@ def eval_votes(top_movies):
     plt.boxplot([m['votes'] for m in top_movies])
     plt.show()
 
+    plt.clf()
+    plt.hist2d([m['year'] for m in tmp], [m['votes'] for m in tmp], bins=(10, 20), cmap='hot')
+    plt.show()
+
 
 def main(args):
 
     top_movies = get_top250_movies(args['download_list'])
 
+    sw = StatisticWriter()
+
     print(top_movies[0].keys())
+    #for movie in top_movies:
+        #print(movie['title'])
+    #ia = IMDb()
+    #the_matrix = ia.get_movie('0133093')
+    #print(the_matrix.keys())
+    #for i in the_matrix.items():
+    #    print(i)
+    #print(the_matrix.items())
 
-    eval_years(top_movies)
+    eval_years(top_movies, sw)
 
-    eval_runtime(top_movies)
+    #eval_runtime(top_movies)
 
-    eval_votes(top_movies)
-    
+    #eval_votes(top_movies)
+
+    sw.write_statistics()
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='do some imdb stuff',
@@ -136,6 +169,6 @@ if __name__ == "__main__":
 # [x] top 3 filme / votes
 # [x] bottom 3 filme / votes
 # [x] votes diagram
+# [ ] filmeinteilung nach genres
 
-# ältester Film: The Kid 1921
 # Einteilung in new >= 1970 > old
