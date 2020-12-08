@@ -66,14 +66,12 @@ def eval_runtime(top_movies, sw):
     sw.set_movie_runtime_informations(longest_movies, shortest_movies)
 
 
-def eval_votes(top_movies):
+def eval_votes(top_movies, sw):
     sorted_movies = sorted(top_movies, key=lambda movie: movie['votes'], reverse=True)
-    print("Most votes:")
-    for movie in sorted_movies[:3]:
-        print(movie, movie['votes'])
-    print("less votes:")
-    for movie in sorted_movies[:-4:-1]:
-        print(movie, movie['votes'])
+
+    most_votes_movies = [f"{movie}, {movie['votes']} votes" for movie in sorted_movies[:3]]
+    less_votes_movies = [f"{movie}, {movie['votes']} votes" for movie in sorted_movies[:-4:-1]]
+    sw.set_movie_votes_informations(most_votes_movies, less_votes_movies)
 
     plt.clf()
     #plt.hist([m['votes'] for m in top_movies], bins=30, color="#179c7d", edgecolor="#000000")
@@ -96,7 +94,7 @@ def eval_votes(top_movies):
     plt.show()
 
     plt.clf()
-    tmp = sorted(top_movies, key= lambda movies: movie['top 250 rank'])
+    tmp = sorted(top_movies, key= lambda movie: movie['top 250 rank'])
     plt.plot([m['top 250 rank'] for m in tmp], [m['votes'] for m in tmp], 'x')
     plt.ylabel('votes')
     plt.xlabel("movie rank")
@@ -132,7 +130,7 @@ def main(args):
 
     eval_runtime(top_movies, sw)
 
-    #eval_votes(top_movies)
+    eval_votes(top_movies, sw)
 
     sw.write_statistics()
 
@@ -162,6 +160,7 @@ if __name__ == "__main__":
 # [x] top 3 filme / votes
 # [x] bottom 3 filme / votes
 # [x] votes diagram
+# [ ] Dekaden Histogramm
 # [ ] filmeinteilung nach genres
 # [ ] Sortierung nach Top1000 Voters
 # [ ] Sortierung nach Male/Female

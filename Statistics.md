@@ -29,3 +29,17 @@ Shortest Movies:
 1. Sherlock Jr., 45 min
 2. The General, 67 min
 3. The Kid, 68 min
+
+# Movie votes
+
+
+Movies with most votes:
+1. The Shawshank Redemption, 2309890 votes
+2. The Dark Knight, 2272717 votes
+3. Inception, 2034799 votes
+
+
+Movies with fewest votes:
+1. Autumn Sonata, 25069 votes
+2. Vikram Vedha, 26400 votes
+3. Rififi, 27752 votes
