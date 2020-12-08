@@ -44,12 +44,7 @@ def parse_runtime(runtime_str):
 
 def eval_years(top_movies, sw):
     sorted_movies_year = sorted(top_movies, key=lambda movie: movie['year'], reverse=True)
-    print("Newest Movies:")
-    for movie in sorted_movies_year[:3]:
-        print(movie, movie['year'])
-    print("Oldest Movies:")
-    for movie in sorted_movies_year[:-4:-1]:
-        print(movie, movie['year'])
+
     years = [movie['year'] for movie in sorted_movies_year]
     print("mean release year =", statistics.mean(years))
     print("median release year =", statistics.median(years))
@@ -59,21 +54,19 @@ def eval_years(top_movies, sw):
     sw.set_movie_years_informations(newest_movies, oldest_movies)
 
 
-def eval_runtime(top_movies):
+def eval_runtime(top_movies, sw):
     sorted_movies = sorted(top_movies, key=lambda movie: parse_runtime(movie['tech']['runtime'][0]), reverse=True)
-    print("Longest Movies:")
-    for movie in sorted_movies[:3]:
-        print(movie, parse_runtime(movie['tech']['runtime'][0]))
-    print("Shortest Movies:")
-    for movie in sorted_movies[:-4:-1]:
-        print(movie, parse_runtime(movie['tech']['runtime'][0]), "min")
+
     runtimes = [parse_runtime(movie['tech']['runtime'][0]) for movie in sorted_movies]
     print("mean runtime =", statistics.mean(runtimes), "min")
     print("median runtime =", statistics.median(runtimes), "min")
 
+    longest_movies = [f"{movie}, {parse_runtime(movie['tech']['runtime'][0])} min" for movie in sorted_movies[:3]]
+    shortest_movies = [f"{movie}, {parse_runtime(movie['tech']['runtime'][0])} min" for movie in sorted_movies[:-4:-1]]
+    sw.set_movie_runtime_informations(longest_movies, shortest_movies)
+
 
 def eval_votes(top_movies):
-
     sorted_movies = sorted(top_movies, key=lambda movie: movie['votes'], reverse=True)
     print("Most votes:")
     for movie in sorted_movies[:3]:
@@ -137,7 +130,7 @@ def main(args):
 
     eval_years(top_movies, sw)
 
-    #eval_runtime(top_movies)
+    eval_runtime(top_movies, sw)
 
     #eval_votes(top_movies)
 
@@ -170,5 +163,8 @@ if __name__ == "__main__":
 # [x] bottom 3 filme / votes
 # [x] votes diagram
 # [ ] filmeinteilung nach genres
+# [ ] Sortierung nach Top1000 Voters
+# [ ] Sortierung nach Male/Female
+# [ ] Abweichung zwischen normalem Rating und Rating der Top1000 Users. Wo gibt es die größten Differenzen?
 
 # Einteilung in new >= 1970 > old
