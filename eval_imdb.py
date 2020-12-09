@@ -91,7 +91,7 @@ def eval_votes(top_movies, sw):
     plt.ylabel('votes')
     plt.xlabel("year")
     plt.title("votes per year")
-    plt.show()
+    #plt.show()
 
     plt.clf()
     tmp = sorted(top_movies, key= lambda movie: movie['top 250 rank'])
@@ -99,15 +99,21 @@ def eval_votes(top_movies, sw):
     plt.ylabel('votes')
     plt.xlabel("movie rank")
     plt.title("votes per movie")
-    plt.show()
+    #plt.show()
 
     plt.clf()
-    plt.boxplot([m['votes'] for m in top_movies])
-    plt.show()
+    votes = [m['votes'] for m in top_movies]
+    mean_votes = round(statistics.mean(votes))
+    median_votes = round(statistics.median(votes))
+    val = plt.boxplot(votes, meanline=True, showmeans=True)
+    plt.legend([val['means'][0], val['medians'][0]], [f"mean   = {mean_votes}", f"median = {median_votes}"])
+    plt.xticks([])
+    plt.title("votes per movie as boxplot")
+    plt.savefig("./figs/votes_boxplot.png")
 
     plt.clf()
     plt.hist2d([m['year'] for m in tmp], [m['votes'] for m in tmp], bins=(10, 20), cmap='hot')
-    plt.show()
+    #plt.show()
 
 
 def main(args):

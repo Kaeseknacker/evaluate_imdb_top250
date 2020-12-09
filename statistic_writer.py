@@ -38,4 +38,6 @@ class StatisticWriter:
         mdfile.new_paragraph("Movies with fewest votes:")
         mdfile.new_list(self.less_votes_movies, marked_with='1')
 
+        mdfile.new_line(mdfile.new_inline_image(text='Votes as boxplot', path='./figs/votes_boxplot.png'))
+
         mdfile.create_md_file()

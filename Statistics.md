@@ -2,7 +2,7 @@
 IMDb Top 250 Statistics
 =======================
 
-# Evaluate movie years
+# Movie years
 
 
 Newest Movies:
@@ -16,7 +16,7 @@ Oldest Movies:
 2. Sherlock Jr., 1924
 3. The Gold Rush, 1925
 
-# Evaluate movie runtimes
+# Movie runtimes
 
 
 Longest Movies:
@@ -43,3 +43,5 @@ Movies with fewest votes:
 1. Autumn Sonata, 25069 votes
 2. Vikram Vedha, 26400 votes
 3. Rififi, 27752 votes
+  
+![Votes as boxplot](./figs/votes_boxplot.png)
