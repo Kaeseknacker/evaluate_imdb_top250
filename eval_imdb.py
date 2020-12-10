@@ -2,6 +2,8 @@ import argparse
 import pickle
 import re
 import statistics
+from itertools import groupby
+import math
 
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -52,6 +54,18 @@ def eval_years(top_movies, sw):
     newest_movies = [f"{movie}, {movie['year']}" for movie in sorted_movies_year[:3]]
     oldest_movies = [f"{movie}, {movie['year']}" for movie in sorted_movies_year[:-4:-1]]
     sw.set_movie_years_informations(newest_movies, oldest_movies)
+
+    # Decades histogram
+    years_per_decade = [list(g) for _, g in groupby(years, lambda i: i // 10)]
+    decades = [int(math.floor(i[0] / 10.0) * 10.0) for i in years_per_decade]
+    decade_count = [len(i) for i in years_per_decade]
+    assert len(decades) == len(decade_count)
+
+    plt.clf()
+    plt.bar(decades, decade_count, width=8)
+    plt.title("movies released per decade")
+    plt.xticks(decades)
+    plt.savefig("./figs/decades_histogramm.png")
 
 
 def eval_runtime(top_movies, sw):
@@ -166,10 +180,8 @@ if __name__ == "__main__":
 # [x] top 3 filme / votes
 # [x] bottom 3 filme / votes
 # [x] votes diagram
-# [ ] Dekaden Histogramm
+# [x] Dekaden Histogramm
 # [ ] filmeinteilung nach genres
 # [ ] Sortierung nach Top1000 Voters
 # [ ] Sortierung nach Male/Female
 # [ ] Abweichung zwischen normalem Rating und Rating der Top1000 Users. Wo gibt es die größten Differenzen?
-
-# Einteilung in new >= 1970 > old

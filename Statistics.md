@@ -15,7 +15,8 @@ Oldest Movies:
 1. The Kid, 1921
 2. Sherlock Jr., 1924
 3. The Gold Rush, 1925
-
+  
+![Movies released per decade](./figs/decades_histogramm.png)
 # Movie runtimes
 
 

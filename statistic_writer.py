@@ -26,6 +26,8 @@ class StatisticWriter:
         mdfile.new_paragraph("Oldest Movies:")
         mdfile.new_list(self.oldest_movies, marked_with='1')
 
+        mdfile.new_line(mdfile.new_inline_image(text='Movies released per decade', path='./figs/decades_histogramm.png'))
+
         mdfile.new_header(level=1, title="Movie runtimes")
         mdfile.new_paragraph("Longest Movies:")
         mdfile.new_list(self.longest_movies, marked_with='1')
